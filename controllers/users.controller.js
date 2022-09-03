@@ -15,23 +15,23 @@ module.exports.saveAUser = (req,res) =>{
 }
 module.exports.updateAUser = (req,res) =>{
     const {id} = req.params;
-    const newUser = users.find(user => user.id === Number(id))
-    newUser.id = id;
-    newUser.name = req.body.name;
+    let newUser = users.find(user => user.id === Number(id))
+    newUser= req.body;
     res.send(newUser)
 }
 
 module.exports.updateMultipleUsers = (req,res) =>{
-    const {id} = req.params;
-    const newUsers = users.map(user=>{
-        let selectedUsers = [{id: user.id, gender:req.body.gender, name:req.body.name, contact: req.body.contact, address: req.body.address, photoURL: req.body.photoURL}]
-        let foundUser = selectedUsers.find(user => user.id === Number(id))
-        if(foundUser){
-          user =  Object.assign(id, foundUser)
+    const updatedUser = req.body;
+    const updatedUsers = users.map(user => {
+        const haveThis = updatedUser.find(u => u.id == user.id && { ...user, ...u })
+        if (haveThis) {
+            return { ...user, ...haveThis }
+        } else {
+            return user
         }
-        return user;
     })
-    res.send(newUsers)
+    res.send(updatedUsers)
+
 }
 module.exports.deleteAUser = (req,res) =>{
     const {id} = req.params;
