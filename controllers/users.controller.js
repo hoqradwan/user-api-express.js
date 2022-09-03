@@ -2,7 +2,8 @@ const fs = require("fs")
 const data = fs.readFileSync('users.json')
 let users = JSON.parse(data)
 module.exports.getAllUsers = (req,res)=>{
-    res.send(users)
+    const {limit} = req.query;
+    res.send(users.slice(0,limit))
 }
 module.exports.getARandomUser = (req,res)=>{
     const randomUser = users.find(user => Math.floor(Math.random()*user.id)) 
